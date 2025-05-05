@@ -74,4 +74,28 @@ public function addPppoeProfile(array $data)
     return $this->client->query($query)->read();
 }
 
+public function deletePppoeProfile(string $name)
+{
+    $query = new Query('/ppp/profile/remove');
+    $query->equal('numbers', $name); // gunakan 'name' bukan '.id'
+
+    return $this->client->query($query)->read();
+}
+
+public function updatePppoeProfile(array $data)
+{
+    $query = new \RouterOS\Query('/ppp/profile/set');
+
+    $query->equal('.id', $data['.id']);
+
+    // Hanya tambahkan field jika nilainya tidak null
+    foreach ($data as $key => $value) {
+        if ($key !== '.id' && $value !== null) {
+            $query->equal($key, $value);
+        }
+    }
+
+    return $this->client->query($query)->read();
+}
+
 }

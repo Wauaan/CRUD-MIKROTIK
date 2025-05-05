@@ -17,14 +17,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($servers as $server)
-                        <tr>
-                            <td>{{ $server['interface'] ?? '-' }}</td>
-                            <td>{{ $server['service-name'] ?? '-' }}</td>
-                            <td>{{ $server['default-profile'] ?? '-' }}</td>
-                            <td>{{ $server['disabled'] === 'true' ? 'Yes' : 'No' }}</td>
-                        </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>

@@ -30,6 +30,9 @@ Route::prefix('mikrotik/pppoe')->group(function () {
     Route::get('/profile',[MikrotikController::class, 'view_profile'])->name('PPPoE.Profile');
 });
 Route::post('/mikrotik/pppoe/profile/store', [MikrotikController::class, 'store'])->name('pppoe-profiles.store');
+Route::delete('/mikrotik/pppoe/profile/{id}', [MikrotikController::class, 'destroy']);
+Route::put('/mikrotik/pppoe/profile/{index}', [MikrotikController::class, 'update'])->name('pppoe-profiles.update');
+
 
 
 
