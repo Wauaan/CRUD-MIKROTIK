@@ -15,11 +15,32 @@
             <span>Dashboard</span>
         </a>
     </li>    
-    <li class="nav-item {{ Request::is('mikrotik/resourcesa') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('mikrotik/resourcesa') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+    <li class="nav-item {{ Request::is('mikrotik/resources') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('mikrotik.resorces') }}">
+            <i class="fas fa-fw fa-brands fa-cogs"></i>
             <span>Resources</span>
         </a>
     </li>
-    
+    <li class="nav-item {{ Request::is('mikrotik/interfaces') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('mikrotik.interfaces') }}">
+            <i class="fas fa-fw fa-chart-bar"></i>
+            <span>Interfaces</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ Request::is('mikrotik/PPPoE*') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePPPoE"
+            aria-expanded="false" aria-controls="collapsePPPoE">
+            <i class="fas fa-network-wired"></i>
+            <span>PPPoE</span>
+        </a>
+        <div id="collapsePPPoE" class="collapse {{ Request::is('mikrotik/PPPoE*') ? 'show' : '' }}"
+            aria-labelledby="headingPPPoE" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('PPPoE.Server') }}">PPPoE Server</a>
+                <a class="collapse-item" href="{{ route('PPPoE.Secret') }}">PPPoE Secret</a>
+                <a class="collapse-item" href="{{ route('PPPoE.Profile') }}">PPPoE Profile</a>
+            </div>
+        </div>
+    </li>    
 </ul>

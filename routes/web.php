@@ -19,9 +19,18 @@ Route::get('/', function () {
 });
 
 // Ini untuk slash di search bar website
-Route::get('/mikrotik/interfaces', [MikrotikController::class, 'interfaces']);
-Route::get('/mikrotik/resources', [MikrotikController::class, 'resources']);
 //api
-Route::get('/mikrotik/resourcesa', [MikrotikController::class, 'resources_api']);
-Route::get('/api/mikrotik/resources', [MikrotikController::class, 'apiResources']);
+Route::get('/mikrotik/resources', [MikrotikController::class, 'view_resources'])->name('mikrotik.resorces');
+Route::get('/mikrotik/interfaces', [MikrotikController::class, 'view_interfaces'])->name('mikrotik.interfaces');
+Route::get('/mikrotik/interface/monitor', [MikrotikController::class, 'monitorInterface']);
+
+Route::prefix('mikrotik/pppoe')->group(function () {
+    Route::get('/server', [MikrotikController::class, 'view_server'])->name('PPPoE.Server');
+    Route::get('/secret', [MikrotikController::class, 'view_secret'])->name('PPPoE.Secret');
+    Route::get('/profile',[MikrotikController::class, 'view_profile'])->name('PPPoE.Profile');
+});
+Route::post('/mikrotik/pppoe/profile/store', [MikrotikController::class, 'store'])->name('pppoe-profiles.store');
+
+
+
 

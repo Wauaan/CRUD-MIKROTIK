@@ -17,4 +17,15 @@ use App\Http\Controllers\MikrotikController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/mikrotik/resourcesa', [MikrotikController::class, 'apiResources']);
+Route::get('/mikrotik/resources', [MikrotikController::class, 'api_Resources']);
+Route::get('/mikrotik/interfaces', [MikrotikController::class, 'api_Interfaces']);
+Route::get('/mikrotik/interface/monitor', [MikrotikController::class, 'monitorInterface']);
+
+Route::prefix('mikrotik/pppoe')->group(function () {
+    Route::get('/server', [MikrotikController::class, 'server']);
+    Route::get('/secret', [MikrotikController::class, 'secret']);
+    Route::get('/profile', [MikrotikController::class, 'profile']);
+});
+
+
+

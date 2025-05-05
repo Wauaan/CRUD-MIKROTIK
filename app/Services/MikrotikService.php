@@ -33,4 +33,45 @@ class MikrotikService
     // Biasanya hanya 1 item, jadi kita ambil index pertama
     return $resources[0] ?? [];
 }
+public function monitorInterface($interface)
+{
+    $query = new Query('/interface/monitor-traffic');
+    $query->equal('interface', $interface);
+    $query->equal('once', '');
+
+    $result = $this->client->query($query)->read();
+
+    return $result[0] ?? [];
+}
+
+//Service PPPoE
+public function getPPPoEServers()
+{
+    $query = new Query('/interface/pppoe-server/server/print');
+    return $this->client->query($query)->read();
+}
+
+public function getSecrets()
+{
+    $query = new Query('/ppp/secret/print');
+    return $this->client->query($query)->read();
+}
+
+public function getProfiles()
+{
+    $query = new Query('/ppp/profile/print');
+    return $this->client->query($query)->read();
+}
+
+public function addPppoeProfile(array $data)
+{
+    $query = new Query('/ppp/profile/add');
+
+    foreach ($data as $key => $value) {
+        $query->equal($key, $value);
+    }
+
+    return $this->client->query($query)->read();
+}
+
 }
