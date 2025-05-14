@@ -1,9 +1,24 @@
 @extends('template.utama')
-
+@section('title', 'PPPoE Profile')
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-3">Daftar PPPoE Profiles</h3>
-
+    <!-- Menampilkan alert jika ada session flash -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @elseif(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProfileModal">Tambah Profile</button>
 
     <table class="table table-bordered">

@@ -20,10 +20,22 @@ class MikrotikService
     }
 
     public function getInterfaces()
-    {
-        $query = new Query('/interface/print');
-        return $this->client->query($query)->read();
-    }
+{
+    // Menjalankan query untuk mendapatkan daftar interface dari Mikrotik
+    $query = new Query('/interface/print');
+    $interfaces = $this->client->query($query)->read();
+
+
+    // Filter interface untuk mengabaikan yang berhubungan dengan PPPoE kecuali 'bridge-pppoe'
+    $filteredInterfaces = array_filter($interfaces, function($interface) {
+        // Saring interface yang mengandung 'pppoe' atau 'tunnelid-laravelapi', kecuali 'bridge-pppoe'
+        return !(strpos(strtolower($interface['name']), 'pppoe') !== false && strpos(strtolower($interface['name']), 'bridge-pppoe') === false) 
+            && strpos(strtolower($interface['name']), 'tunnelid-laravelapi') === false;
+    });
+
+    // Mengembalikan daftar interface yang sudah difilter
+    return array_values($filteredInterfaces); // array_values untuk memastikan indeksnya berurutan
+}
     
     public function getResources()
 {
@@ -94,6 +106,97 @@ public function updatePppoeProfile(array $data)
             $query->equal($key, $value);
         }
     }
+
+    return $this->client->query($query)->read();
+}
+//New
+// Add PPPoE Server
+    public function addPppoeServer(array $data)
+    {
+        try {
+            // Menyusun query untuk menambahkan server PPPoE
+            $query = new Query('/interface/pppoe-server/server/add');
+            
+            foreach ($data as $key => $value) {
+                $query->equal($key, $value);
+            }
+            
+            // Kirim query ke Mikrotik
+            $response = $this->client->query($query)->read();
+            
+            if (empty($response)) {
+                throw new Exception("Mikrotik tidak mengembalikan respons yang valid.");
+            }
+            
+            return $response;
+        } catch (Exception $e) {
+            // Tangani error
+            \Log::error('Gagal menghubungi Mikrotik', [
+                'message' => $e->getMessage(),
+                'data' => $data,
+            ]);
+            throw new Exception("Terjadi kesalahan saat menambahkan PPPoE Server: " . $e->getMessage());
+        }
+    }
+
+
+
+// Update PPPoE Server
+public function updatePppoeServer(array $data)
+{
+    $query = new Query('/interface/pppoe-server/server/set');
+    $query->equal('.id', $data['.id']);
+    
+    foreach ($data as $key => $value) {
+        if ($value !== null) {
+            $query->equal($key, $value);
+        }
+    }
+
+    return $this->client->query($query)->read();
+}
+
+// Delete PPPoE Server
+public function deletePppoeServer(string $id)
+{
+    $query = new Query('/interface/pppoe-server/server/remove');
+    $query->equal('numbers', $id);
+
+    return $this->client->query($query)->read();
+}
+
+// Add PPPoE Secret
+public function addPppoeSecret(array $data)
+{
+    $query = new Query('/ppp/secret/add');
+    
+    foreach ($data as $key => $value) {
+        $query->equal($key, $value);
+    }
+
+    return $this->client->query($query)->read();
+}
+
+// Update PPPoE Secret
+public function updatePppoeSecret(array $data)
+{
+    $query = new Query('/ppp/secret/set');
+    $query->equal('.id', $data['.id']);
+    
+    foreach ($data as $key => $value) {
+        if ($value !== null) {
+            $query->equal($key, $value);
+        }
+    }
+
+    return $this->client->query($query)->read();
+}
+
+// Delete PPPoE Secret
+public function deletePppoeSecret(string $id)
+{
+    $query = new Query('/ppp/secret/remove');
+    $query->equal('numbers', $id);
 
     return $this->client->query($query)->read();
 }
