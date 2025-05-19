@@ -24,11 +24,6 @@ Route::get('/mikrotik/resources', [MikrotikController::class, 'view_resources'])
 Route::get('/mikrotik/interfaces', [MikrotikController::class, 'view_interfaces'])->name('mikrotik.interfaces');
 Route::get('/mikrotik/interface/monitor', [MikrotikController::class, 'monitorInterface']);
 
-Route::prefix('mikrotik/pppoe')->group(function () {
-    Route::get('/server', [MikrotikController::class, 'view_server'])->name('PPPoE.Server');
-    Route::get('/secret', [MikrotikController::class, 'view_secret'])->name('PPPoE.Secret');
-    Route::get('/profile',[MikrotikController::class, 'view_profile'])->name('PPPoE.Profile');
-});
 Route::post('/mikrotik/pppoe/profile/store', [MikrotikController::class, 'storeProfile'])->name('pppoe-profiles.store');
 Route::delete('/mikrotik/pppoe/profile/{id}', [MikrotikController::class, 'destroyProfile']);
 Route::put('/mikrotik/pppoe/profile/{index}', [MikrotikController::class, 'updateProfile'])->name('pppoe-profiles.update');

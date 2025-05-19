@@ -200,5 +200,15 @@ public function deletePppoeSecret(string $id)
 
     return $this->client->query($query)->read();
 }
-
+//Get User PPPoE
+public function getActivePppoeUsers()
+{
+    try {
+        $this->connect();
+        return $this->client->query('/ppp/active/print')->read();
+    } catch (\Exception $e) {
+        \Log::error("Gagal mengambil data PPPoE Aktif: " . $e->getMessage());
+        return [];
+    }
+}
 }

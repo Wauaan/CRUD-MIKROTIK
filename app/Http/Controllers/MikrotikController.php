@@ -50,7 +50,15 @@ class MikrotikController extends Controller
         $result = $this->mikrotikService->monitorInterface($interfaceName);
         return response()->json($result);
     }
+    //PPPoE Active User
+    public function activePppoeUsers()
+    {
+        $activeUsers = $this->mikrotikService->getActivePppoeUsers();
+        return view('pppoe.active', compact('activeUsers'));
+    }
 
+
+    
     // Menampilkan semua PPPoE Server
     public function server()
     {
@@ -103,15 +111,14 @@ public function storeServer(Request $request)
     // Update PPPoE Server
     public function updateServer(Request $request, $id)
     {
-        $request->validate([
-            'service-name' => 'required|string',
-            'interface' => 'required|string',
-            'default-profile' => 'nullable|string',
-            'disabled' => 'nullable|boolean',
-        ]);
-
         try {
             // Menyusun data untuk update
+            $request->validate([
+                'service-name' => 'required|string',
+                'interface' => 'required|string',
+                'default-profile' => 'nullable|string',
+                'disabled' => 'nullable', // tidak pakai 'boolean' agar tidak error saat checkbox tidak dicentang
+            ]);
             $data = [
                 '.id' => $id,
                 'service-name' => $request->input('service-name'),
@@ -119,10 +126,8 @@ public function storeServer(Request $request)
                 'default-profile' => $request->input('default-profile', 'default'),
                 'disabled' => $request->boolean('disabled') ? 'yes' : 'no',
             ];
-
             // Update server di Mikrotik
             $this->mikrotikService->updatePppoeServer($data);
-
             // Flash message untuk sukses
             return redirect()->route('PPPoE.Server')->with('success', 'Server berhasil diupdate');
         } catch (\Throwable $e) {
@@ -250,4 +255,81 @@ public function storeServer(Request $request)
             return redirect()->route('PPPoE.Profile')->with('error', 'Gagal menghapus profile: ' . $e->getMessage());
         }
     }
+
+    //Add PPPoE Secret
+    public function storeSecret(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'password' => 'required|string',
+        'profile' => 'required|string',
+    ]);
+
+    try {
+        $data = [
+            'name' => $request->input('name'),
+            'password' => $request->input('password'),
+            'service' => 'pppoe',
+            'profile' => $request->input('profile'),
+        ];
+
+        $this->mikrotikService->addPppoeSecret($data);
+
+        return redirect()->route('PPPoE.Secret')->with('success', 'Secret berhasil ditambahkan');
+    } catch (\Throwable $e) {
+        return redirect()->route('PPPoE.Secret')->with('error', 'Gagal menambahkan secret: ' . $e->getMessage());
+    }
+}
+    //Edit PPPoE Secret
+    public function editSecret($id)
+{
+    try {
+        $secrets = $this->mikrotikService->getSecrets();
+        $secret = collect($secrets)->firstWhere('.id', $id);
+
+        if (!$secret) {
+            return redirect()->route('PPPoE.Secret')->with('error', 'Secret tidak ditemukan');
+        }
+
+        $profiles = $this->mikrotikService->getProfiles();
+
+        return view('mikrotik.PPPoE.secret_edit', compact('secret', 'profiles'));
+    } catch (\Throwable $e) {
+        return redirect()->route('PPPoE.Secret')->with('error', 'Gagal membuka form edit: ' . $e->getMessage());
+    }
+}
+    //Update PPPoE Secret
+    public function updateSecret(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'profile' => 'required|string',
+    ]);
+
+    try {
+        $data = [
+            '.id' => $id,
+            'name' => $request->input('name'),
+            'password' => $request->input('password'),
+            'profile' => $request->input('profile'),
+        ];
+
+        $this->mikrotikService->updatePppoeSecret($data);
+
+        return redirect()->route('PPPoE.Secret')->with('success', 'Secret berhasil diupdate');
+    } catch (\Throwable $e) {
+        return redirect()->route('PPPoE.Secret')->with('error', 'Gagal update secret: ' . $e->getMessage());
+    }
+}
+    //Hapus PPPoE Secret
+    public function destroySecret($id)
+{
+    try {
+        $this->mikrotikService->deletePppoeSecret($id);
+        return redirect()->route('PPPoE.Secret')->with('success', 'Secret berhasil dihapus');
+    } catch (\Throwable $e) {
+        return redirect()->route('PPPoE.Secret')->with('error', 'Gagal menghapus secret: ' . $e->getMessage());
+    }
+}
+
 }

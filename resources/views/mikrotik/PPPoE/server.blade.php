@@ -2,22 +2,21 @@
 @section('title', 'PPPoE Server')
 @section('content')
 <div class="container mt-4">
-    <!-- Menampilkan alert jika ada session flash -->
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@elseif(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @elseif(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 
     <h3 class="mb-3">Daftar PPPoE Servers</h3>
 
@@ -53,8 +52,6 @@
                         <label>Nama Server</label>
                         <input type="text" class="form-control" name="service-name" required>
                     </div>
-                    
-                    <!-- Dropdown Interface -->
                     <div class="form-group">
                         <label>Interface</label>
                         <select name="interface" class="form-control" required>
@@ -97,11 +94,15 @@
                     <input type="hidden" name="id" id="editServerId">
                     <div class="form-group">
                         <label>Nama Server</label>
-                        <input type="text" class="form-control" name="name" id="editServerName" required>
+                        <input type="text" class="form-control" name="service-name" id="editServerName" required>
                     </div>
                     <div class="form-group">
                         <label>Interface</label>
-                        <input type="text" class="form-control" name="interface" id="editServerInterface" required>
+                        <select name="interface" class="form-control" id="editServerInterface" required>
+                            @foreach($interfaces as $interface)
+                                <option value="{{ $interface['name'] }}">{{ $interface['name'] }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group form-check">
                         <input type="hidden" name="disabled" value="false">
@@ -117,7 +118,6 @@
         </form>
     </div>
 </div>
-
 @endsection
 
 @push('scripts')
@@ -143,7 +143,7 @@
 
             tbody.innerHTML += `
                 <tr>
-                    <td>${server['service-name']|| '-'}</td>
+                    <td>${server['service-name'] || '-'}</td>
                     <td>${server.interface || '-'}</td>
                     <td>${server.disabled === 'true' ? 'Ya' : 'Tidak'}</td>
                     <td>
@@ -155,18 +155,24 @@
         });
     }
 
-    function openEditModal(id) {
-        const server = serversCache.find(s => s['.id'] === id);
-        if (!server) return;
+function openEditModal(id) {
+    const server = serversCache.find(s => s['.id'] === id);
+    if (!server) return;
 
-        document.getElementById('editServerId').value = server['.id'];
-        document.getElementById('editServerName').value = server.name || '';
-        document.getElementById('editServerInterface').value = server.interface || '';
-        document.getElementById('editDisabledCheck').checked = server.disabled === 'true';
+    document.getElementById('editServerId').value = server['.id'];
+    document.getElementById('editServerName').value = server['service-name'] || '';
 
-        document.getElementById('editServerForm').action = `/mikrotik/pppoe/server/${encodeURIComponent(server['.id'])}`;
-        $('#editServerModal').modal('show');
-    }
+    const interfaceSelect = document.getElementById('editServerInterface');
+    [...interfaceSelect.options].forEach(option => {
+        option.selected = option.value === server.interface;
+    });
+
+    document.getElementById('editDisabledCheck').checked = server.disabled === 'true';
+
+    document.getElementById('editServerForm').action = `/mikrotik/pppoe/server/${encodeURIComponent(server['.id'])}`;
+    $('#editServerModal').modal('show');
+}
+
 
     document.addEventListener('DOMContentLoaded', loadServers);
 </script>
