@@ -27,7 +27,12 @@
             <span>Interfaces</span>
         </a>
     </li>
-
+        <li class="nav-item {{ Request::is('nextdns/denylist') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('denylist') }}">
+            <i class="fas fa-fw fa-globe"></i>
+            <span>Blokir Situs</span>
+        </a>
+    </li>
     <li class="nav-item {{ Request::is('mikrotik/PPPoE*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePPPoE"
             aria-expanded="false" aria-controls="collapsePPPoE">

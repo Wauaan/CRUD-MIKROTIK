@@ -36,7 +36,17 @@ class MikrotikService
     // Mengembalikan daftar interface yang sudah difilter
     return array_values($filteredInterfaces); // array_values untuk memastikan indeksnya berurutan
 }
-    
+    public function getDate()
+{
+    $query = new Query('/system/clock/print');
+    return $this->client->query($query)->read();
+}
+    public function getRouter()
+{
+    $query = new Query('/system/routerboard/print');
+    return $this->client->query($query)->read();
+}
+
     public function getResources()
 {
     $query = new Query('/system/resource/print');
@@ -204,7 +214,6 @@ public function deletePppoeSecret(string $id)
 public function getActivePppoeUsers()
 {
     try {
-        $this->connect();
         return $this->client->query('/ppp/active/print')->read();
     } catch (\Exception $e) {
         \Log::error("Gagal mengambil data PPPoE Aktif: " . $e->getMessage());

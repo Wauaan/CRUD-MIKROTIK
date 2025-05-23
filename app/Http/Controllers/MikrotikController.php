@@ -13,7 +13,6 @@ class MikrotikController extends Controller
     {
         $this->mikrotikService = $mikrotikService;
     }
-
     // API JSON - Resource
     public function api_Resources()
     {
@@ -32,7 +31,16 @@ class MikrotikController extends Controller
         $interfaces = $this->mikrotikService->getInterfaces();
         return response()->json($interfaces);
     }
-
+    public function api_date()
+    {
+        $date = $this->mikrotikService->getDate();
+        return response()->json($date);
+    }
+        public function api_router()
+    {
+        $date = $this->mikrotikService->getRouter();
+        return response()->json($date);
+    }
     public function view_interfaces()
     {
         return view('mikrotik.interfaces');
@@ -54,10 +62,8 @@ class MikrotikController extends Controller
     public function activePppoeUsers()
     {
         $activeUsers = $this->mikrotikService->getActivePppoeUsers();
-        return view('pppoe.active', compact('activeUsers'));
+        return response()->json($activeUsers);
     }
-
-
     
     // Menampilkan semua PPPoE Server
     public function server()
@@ -71,7 +77,6 @@ class MikrotikController extends Controller
     {
     // Mengambil data interface dari Mikrotik
     $interfaces = $this->mikrotikService->getInterfaces();
-    
     // Mengirim data interface ke tampilan
     return view('mikrotik.PPPoE.server', compact('interfaces'));
     }
@@ -331,5 +336,8 @@ public function storeServer(Request $request)
         return redirect()->route('PPPoE.Secret')->with('error', 'Gagal menghapus secret: ' . $e->getMessage());
     }
 }
-
+    public function dashboard()
+    {
+        return view('index');
+    }
 }

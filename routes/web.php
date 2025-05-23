@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MikrotikController;
+use App\Http\Controllers\NextDnsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +15,7 @@ use App\Http\Controllers\MikrotikController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', [MikrotikController::class, 'dashboard']);
 
 // Ini untuk slash di search bar website
 //api
@@ -44,6 +43,9 @@ Route::prefix('mikrotik/pppoe')->group(function () {
     Route::put('/secret/{id}', [MikrotikController::class, 'updateSecret'])->name('pppoe-secrets.update');
     Route::delete('/secret/{id}', [MikrotikController::class, 'destroySecret'])->name('pppoe-secrets.delete');
 });
+Route::get('/nextdns/denylist', [NextDnsController::class, 'showDenylist'])->name('denylist');;
+Route::delete('/denylist/{id}', [NextDnsController::class, 'deleteDenylist'])->name('denylist.delete');
+Route::post('/nextdns/denylist/toggle', [NextDnsController::class, 'toggleActive']);
 
 
 

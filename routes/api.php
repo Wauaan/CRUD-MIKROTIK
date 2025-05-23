@@ -19,12 +19,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('/mikrotik/resources', [MikrotikController::class, 'api_Resources']);
 Route::get('/mikrotik/interfaces', [MikrotikController::class, 'api_Interfaces']);
+Route::get('/mikrotik/date', [MikrotikController::class, 'api_date']);
+Route::get('/mikrotik/router', [MikrotikController::class, 'api_router']);
 Route::get('/mikrotik/interface/monitor', [MikrotikController::class, 'monitorInterface']);
 
 Route::prefix('mikrotik/pppoe')->group(function () {
     Route::get('/server', [MikrotikController::class, 'server']);
     Route::get('/secret', [MikrotikController::class, 'secret']);
     Route::get('/profile', [MikrotikController::class, 'profile']);
+    Route::get('/active', [MikrotikController::class, 'activePppoeUsers']);
 });
 
 
