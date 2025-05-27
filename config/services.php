@@ -33,8 +33,8 @@ return [
     
     // config/services.php
         'nextdns' => [
-        'api_key' => env('NEXTDNS_API_KEY'),
-        'profile_id' => env('NEXTDNS_PROFILE_ID'),
+        'api_key' => "9b1efa058c22f20798348be63ddaa907c39827d0",
+        'profile_id' => "eb321e",
     ],
 
 ];

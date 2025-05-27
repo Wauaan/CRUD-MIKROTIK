@@ -16,10 +16,10 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Router Info</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Model Router: <span id="router-info-model">Loading...</span></div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Board Name: <span id="router-info-board">Loading...</span></div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Version: <span id="cpu-info-version">Loading...</span></div>
+                        <div class="h5 font-weight-bold text-success text-uppercase mb-1">Router Info</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Model Router: <span id="router-info-model">Loading...</span></div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Board Name: <span id="router-info-board">Loading...</span></div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Version: <span id="cpu-info-version">Loading...</span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-cogs fa-2x text-gray-300"></i>
@@ -35,10 +35,10 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">CPU Info</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">CPU Load: <span id="cpu-info-load">Loading...</span></div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Free Memory: <span id="cpu-info-memory">Loading...</span></div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Free HDD: <span id="cpu-info-hdd">Loading...</span></div>
+                        <div class="h5 font-weight-bold text-success text-uppercase mb-1">CPU Info</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">CPU Load: <span id="cpu-info-load">Loading...</span></div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Free Memory: <span id="cpu-info-memory">Loading...</span></div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Free HDD: <span id="cpu-info-hdd">Loading...</span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-cogs fa-2x text-gray-300"></i>
@@ -54,10 +54,10 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tanggal & Waktu</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Tanggal: <span id="tanggal">Loading...</span></div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Jam: <span id="jam">Loading...</span></div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">Time Zone: <span id="time-zone">Loading...</span></div>
+                        <div class="h5 font-weight-bold text-success text-uppercase mb-1">Tanggal & Waktu</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Tanggal: <span id="tanggal">Loading...</span></div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Jam: <span id="jam">Loading...</span></div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800">Time Zone: <span id="time-zone">Loading...</span></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
