@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\NextDnsController;
 
@@ -10,46 +12,70 @@ use App\Http\Controllers\NextDnsController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
 |
 */
 
-Route::get('/', [MikrotikController::class, 'dashboard']);
-
-// Ini untuk slash di search bar website
-//api
-Route::get('/mikrotik/resources', [MikrotikController::class, 'view_resources'])->name('mikrotik.resorces');
-Route::get('/mikrotik/interfaces', [MikrotikController::class, 'view_interfaces'])->name('mikrotik.interfaces');
-Route::get('/mikrotik/interface/monitor', [MikrotikController::class, 'monitorInterface']);
-
-Route::post('/mikrotik/pppoe/profile/store', [MikrotikController::class, 'storeProfile'])->name('pppoe-profiles.store');
-Route::delete('/mikrotik/pppoe/profile/{id}', [MikrotikController::class, 'destroyProfile']);
-Route::put('/mikrotik/pppoe/profile/{index}', [MikrotikController::class, 'updateProfile'])->name('pppoe-profiles.update');
-Route::post('/mikrotik/pppoe/profile/{id}/disable', [MikrotikController::class, 'disableProfile'])->name('pppoe-profiles.disable');
-
-Route::prefix('mikrotik/pppoe')->group(function () {
-    Route::get('/server', [MikrotikController::class, 'view_server'])->name('PPPoE.Server');
-    Route::get('/secret', [MikrotikController::class, 'view_secret'])->name('PPPoE.Secret');
-    Route::get('/profile', [MikrotikController::class, 'view_profile'])->name('PPPoE.Profile');
-    
-    // CRUD Routes untuk Server
-    Route::post('/server/store', [MikrotikController::class, 'storeServer'])->name('pppoe-servers.store');
-    Route::put('/server/{id}', [MikrotikController::class, 'updateServer'])->name('pppoe-servers.update');
-    Route::delete('/server/{id}', [MikrotikController::class, 'destroyServer'])->name('pppoe-servers.delete');
-    
-    // CRUD Routes untuk Secret
-    Route::post('/secret/store', [MikrotikController::class, 'storeSecret'])->name('pppoe-secrets.store');
-    Route::put('/secret/{id}', [MikrotikController::class, 'updateSecret'])->name('pppoe-secrets.update');
-    Route::delete('/secret/{id}', [MikrotikController::class, 'destroySecret'])->name('pppoe-secrets.delete');
+Route::get('/', function () {
+    return view('welcome');
 });
-Route::get('/nextdns/denylist', [NextDnsController::class, 'showDenylist'])->name('denylist');;
-Route::delete('/denylist/{id}', [NextDnsController::class, 'deleteDenylist'])->name('denylist.delete');
-Route::post('/nextdns/denylist/toggle', [NextDnsController::class, 'toggleActive']);
+
+Route::get('/', [MikrotikController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::middleware('auth')->group(function () {
+
+    Route::get('/', [MikrotikController::class, 'dashboard']);
+
+    // API Mikrotik
+    Route::get('/mikrotik/resources', [MikrotikController::class, 'view_resources'])->name('mikrotik.resorces');
+    Route::get('/mikrotik/interfaces', [MikrotikController::class, 'view_interfaces'])->name('mikrotik.interfaces');
+    Route::get('/mikrotik/interface/monitor', [MikrotikController::class, 'monitorInterface']);
+
+    Route::post('/mikrotik/pppoe/profile/store', [MikrotikController::class, 'storeProfile'])->name('pppoe-profiles.store');
+    Route::delete('/mikrotik/pppoe/profile/{id}', [MikrotikController::class, 'destroyProfile']);
+    Route::put('/mikrotik/pppoe/profile/{index}', [MikrotikController::class, 'updateProfile'])->name('pppoe-profiles.update');
+    Route::post('/mikrotik/pppoe/profile/{id}/disable', [MikrotikController::class, 'disableProfile'])->name('pppoe-profiles.disable');
+
+    Route::prefix('mikrotik/pppoe')->group(function () {
+        Route::get('/server', [MikrotikController::class, 'view_server'])->name('PPPoE.Server');
+        Route::get('/secret', [MikrotikController::class, 'view_secret'])->name('PPPoE.Secret');
+        Route::get('/profile', [MikrotikController::class, 'view_profile'])->name('PPPoE.Profile');
+        
+        // CRUD Routes untuk Server
+        Route::post('/server/store', [MikrotikController::class, 'storeServer'])->name('pppoe-servers.store');
+        Route::put('/server/{id}', [MikrotikController::class, 'updateServer'])->name('pppoe-servers.update');
+        Route::delete('/server/{id}', [MikrotikController::class, 'destroyServer'])->name('pppoe-servers.delete');
+        
+        // CRUD Routes untuk Secret
+        Route::post('/secret/store', [MikrotikController::class, 'storeSecret'])->name('pppoe-secrets.store');
+        Route::put('/secret/{id}', [MikrotikController::class, 'updateSecret'])->name('pppoe-secrets.update');
+        Route::delete('/secret/{id}', [MikrotikController::class, 'destroySecret'])->name('pppoe-secrets.delete');
+    });
+
+    // NextDNS
+    Route::get('/nextdns/denylist', [NextDnsController::class, 'showDenylist'])->name('denylist');
+    Route::delete('/denylist/{id}', [NextDnsController::class, 'deleteDenylist'])->name('denylist.delete');
+    Route::post('/nextdns/denylist/toggle', [NextDnsController::class, 'toggleActive']);
+    Route::post('/nextdns/denylist/add', [NextDnsController::class, 'store'])->name('denylist.store');
+});
+
+});
 
 
 
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest')
+    ->name('login');
 
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('guest');
 
-
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
 

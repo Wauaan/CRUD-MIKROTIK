@@ -39,5 +39,18 @@ public function toggleActive(Request $request)
     $result = $this->nextDns->updateDenylistActiveStatus($domainId, $newStatus);
     return response()->json($result);
 }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'website' => 'required|string',
+        ]);
 
+        $result = $this->nextDns->addToDenylist($request->website);
+
+        if ($result['success']) {
+            return redirect()->back()->with('success', 'Website berhasil ditambahkan.');
+        } else {
+            return redirect()->back()->with('error', 'Gagal menambahkan website.');
+        }
+    }
 }

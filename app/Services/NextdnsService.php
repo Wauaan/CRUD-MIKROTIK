@@ -66,4 +66,24 @@ class NextDnsService
 
         return ['success' => false, 'message' => $response->json()];
     }
+
+    public function addToDenylist(string $website): array
+    {
+        try {
+            $url = "https://api.nextdns.io/profiles/{$this->profileId}/denylist";
+            $response = Http::withHeaders([
+                'X-Api-Key' => $this->apiKey,
+            ])->post($url, [
+                'id' => $website
+            ]);
+
+            if ($response->successful()) {
+                return ['success' => true];
+            }
+
+            return ['success' => false, 'message' => $response->body()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
 }
