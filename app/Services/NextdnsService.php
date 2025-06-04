@@ -9,11 +9,11 @@ class NextDnsService
     protected $apiKey;
     protected $profileId;
     protected $baseUrl;
-    
+
     public function __construct()
     {
-        $this->apiKey = config('services.nextdns.api_key');    // simpan di config/services.php
-        $this->profileId = config('services.nextdns.profile_id');
+        $this->apiKey = config("services.nextdns.api_key"); // simpan di config/services.php
+        $this->profileId = config("services.nextdns.profile_id");
         $this->baseUrl = "https://api.nextdns.io";
     }
 
@@ -22,7 +22,7 @@ class NextDnsService
         $url = "https://api.nextdns.io/profiles/{$this->profileId}/denylist";
 
         $response = Http::withHeaders([
-            'x-api-key' => $this->apiKey,
+            "x-api-key" => $this->apiKey,
         ])->get($url);
 
         if ($response->successful()) {
@@ -30,41 +30,46 @@ class NextDnsService
         }
         return null;
     }
-    
+
     public function deleteFromDenylist($domain)
     {
         $response = Http::withHeaders([
-            'x-api-key' => $this->apiKey,
-        ])->delete("https://api.nextdns.io/profiles/{$this->profileId}/denylist/{$domain}");
+            "x-api-key" => $this->apiKey,
+        ])->delete(
+            "https://api.nextdns.io/profiles/{$this->profileId}/denylist/{$domain}"
+        );
 
         return $response->successful();
     }
-        public function updateDenylistActiveStatus($domainId, $newStatus)
+    public function updateDenylistActiveStatus($domainId, $newStatus)
     {
         $denylist = $this->getDenylist();
 
-        if (!isset($denylist['data'])) {
-            return ['success' => false, 'message' => 'Failed to get denylist.'];
+        if (!isset($denylist["data"])) {
+            return ["success" => false, "message" => "Failed to get denylist."];
         }
 
         // Update domain status
-        foreach ($denylist['data'] as &$item) {
-            if ($item['id'] === $domainId) {
-                $item['active'] = (bool) $newStatus;
+        foreach ($denylist["data"] as &$item) {
+            if ($item["id"] === $domainId) {
+                $item["active"] = (bool) $newStatus;
             }
         }
 
         // Kirim ulang semua data
         $response = Http::withHeaders([
-            'x-api-key' => $this->apiKey,
-            'Content-Type' => 'application/json',
-        ])->put("{$this->baseUrl}/profiles/{$this->profileId}/denylist", $denylist['data']);
+            "x-api-key" => $this->apiKey,
+            "Content-Type" => "application/json",
+        ])->put(
+            "{$this->baseUrl}/profiles/{$this->profileId}/denylist",
+            $denylist["data"]
+        );
 
         if ($response->successful()) {
-            return ['success' => true];
+            return ["success" => true];
         }
 
-        return ['success' => false, 'message' => $response->json()];
+        return ["success" => false, "message" => $response->json()];
     }
 
     public function addToDenylist(string $website): array
@@ -72,18 +77,18 @@ class NextDnsService
         try {
             $url = "https://api.nextdns.io/profiles/{$this->profileId}/denylist";
             $response = Http::withHeaders([
-                'X-Api-Key' => $this->apiKey,
+                "X-Api-Key" => $this->apiKey,
             ])->post($url, [
-                'id' => $website
+                "id" => $website,
             ]);
 
             if ($response->successful()) {
-                return ['success' => true];
+                return ["success" => true];
             }
 
-            return ['success' => false, 'message' => $response->body()];
+            return ["success" => false, "message" => $response->body()];
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ["success" => false, "message" => $e->getMessage()];
         }
     }
 }

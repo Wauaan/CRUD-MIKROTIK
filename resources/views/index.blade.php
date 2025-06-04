@@ -134,11 +134,99 @@
                     <th>IP Address</th>
                     <th>MAC Address</th>
                     <th>Uptime</th>
-                    <th>Interface</th>
                 </tr>
             </thead>
             <tbody id="pppoe-body">
                 <tr><td colspan="6" class="text-center">Memuat data...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Hotspot Active Table -->
+<div class="card mb-4">
+    <div class="card-header">Tabel Hotspot</div>
+    <div class="card-body">
+        <div class="row">
+            <!-- Hotspot Info Cards -->
+            <div class="col-lg-3 mb-4">
+                <div class="card bg-primary text-white shadow">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-white small">User Aktif</div>
+                            <div class="h5 mb-0 font-weight-bold" id="active-hotspot-count">2</div>
+                        </div>
+                        <i class="fas fa-laptop fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 mb-4">
+                <div class="card bg-success text-white shadow">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-white small">Jumlah Server</div>
+                            <div class="h5 mb-0 font-weight-bold" id="hotspot-server-count">1</div>
+                        </div>
+                        <i class="fas fa-server fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 mb-4">
+                <div class="card bg-info text-white shadow">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-white small">Jumlah Akun Hotspot</div>
+                            <div class="h5 mb-0 font-weight-bold" id="hotspot-secret-count">8</div>
+                        </div>
+                        <i class="fas fa-user-lock fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 mb-4">
+                <div class="card bg-warning text-white shadow">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-white small">Jumlah User Profile</div>
+                            <div class="h5 mb-0 font-weight-bold" id="hotspot-profile-count">7</div>
+                        </div>
+                        <i class="fas fa-id-badge fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card-body">
+        <table class="table table-bordered" id="hotspot-active-table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>IP Address</th>
+                    <th>MAC Address</th>
+                    <th>Uptime</th>
+                </tr>
+            </thead>
+            <tbody id="hotspot-body">
+                {{-- <tr><td colspan="6" class="text-center">Memuat data...</td></tr> --}}
+                <tr>
+                    <td>C0A86433</td>
+                    <td>content</td>
+                    <td>192.168.100.51</td>
+                    <td>20:34:FB:D2:33:96</td>
+                    <td>3m31s</td>
+                </tr>
+                <tr>
+                    <td>C0A864773</td>
+                    <td>hr</td>
+                    <td>192.168.100.119</td>
+                    <td>B6:83:76:09:2A:74</td>
+                    <td>27m42s</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -290,7 +378,6 @@
                         <td>${user.address}</td>
                         <td>${user['caller-id']}</td>
                         <td>${user.uptime}</td>
-                        <td>${user.interface}</td>
                     </tr>`;
             });
             document.getElementById('active-pppoe-count').innerText = data.length + ' user';
@@ -420,7 +507,7 @@
     }
 
 function scheduleDashboardData() {
-    setTimeout(fetchDashboardInfo, 0);           // langsung
+    setTimeout(fetchDashboardInfo, 1000);           // langsung
     setTimeout(fetchDashboardBoard, 5000);       // setelah 5 detik
     setTimeout(fetchSystemDate, 10000);          // setelah 10 detik
     setTimeout(fetchActivePppoeUsers, 15000);    // setelah 15 detik
@@ -429,7 +516,7 @@ function scheduleDashboardData() {
     setTimeout(fetchPppoeServer, 30000);         // setelah 30 detik
 
     // Jadwalkan ulang setelah 30 menit
-    setTimeout(scheduleDashboardData, 1800000);  // 30 menit
+    setTimeout(scheduleDashboardData, 5000);  // 30 menit
 }
 
 // Inisialisasi saat halaman dimuat

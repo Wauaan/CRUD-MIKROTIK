@@ -48,4 +48,20 @@
             </div>
         </div>
     </li>    
+        <li class="nav-item {{ Request::is('mikrotik/Hotspot*') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHotspot"
+            aria-expanded="false" aria-controls="collapseHotspot">
+            <i class="fas fa-rss-square"></i>
+            <span>Hotspot</span>
+        </a>
+        <div id="collapseHotspot" class="collapse {{ Request::is('mikrotik/Hotspot*') ? 'show' : '' }}"
+            aria-labelledby="headingHotspot" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('active.hotspot') }}">Hotspot Active User</a>
+                <a class="collapse-item" href="{{ route('hotspot.Server.profile') }}">Hotspot Server Profile</a>
+                <a class="collapse-item" href="{{ route('hotspot.user') }}">Hotspot Users</a>
+                <a class="collapse-item" href="{{ route('hotspot.user.Profile') }}">Hotspot User Profile</a>
+            </div>
+        </div>
+    </li>   
 </ul>

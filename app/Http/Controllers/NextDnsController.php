@@ -16,41 +16,52 @@ class NextDnsController extends Controller
     public function showDenylist()
     {
         $denylist = $this->nextDns->getDenylist();
-        return view('nextdns.denylist', ['denylist' => $denylist]);
+        return view("nextdns.denylist", ["denylist" => $denylist]);
     }
-    
+
     public function deleteDenylist($id)
     {
         $success = $this->nextDns->deleteFromDenylist($id);
 
-        return redirect()->back()->with(
-            $success ? 'success' : 'error',
-            $success ? "Berhasil menghapus {$id}." : "Gagal menghapus {$id}."
-        );
+        return redirect()
+            ->back()
+            ->with(
+                $success ? "success" : "error",
+                $success
+                    ? "Berhasil menghapus {$id}."
+                    : "Gagal menghapus {$id}."
+            );
     }
-    
-public function toggleActive(Request $request)
-{
-    \Log::info('toggleActive called', $request->all());
 
-    $domainId = $request->input('id');
-    $newStatus = $request->input('active');
+    public function toggleActive(Request $request)
+    {
+        \Log::info("toggleActive called", $request->all());
 
-    $result = $this->nextDns->updateDenylistActiveStatus($domainId, $newStatus);
-    return response()->json($result);
-}
+        $domainId = $request->input("id");
+        $newStatus = $request->input("active");
+
+        $result = $this->nextDns->updateDenylistActiveStatus(
+            $domainId,
+            $newStatus
+        );
+        return response()->json($result);
+    }
     public function store(Request $request)
     {
         $request->validate([
-            'website' => 'required|string',
+            "website" => "required|string",
         ]);
 
         $result = $this->nextDns->addToDenylist($request->website);
 
-        if ($result['success']) {
-            return redirect()->back()->with('success', 'Website berhasil ditambahkan.');
+        if ($result["success"]) {
+            return redirect()
+                ->back()
+                ->with("success", "Website berhasil ditambahkan.");
         } else {
-            return redirect()->back()->with('error', 'Gagal menambahkan website.');
+            return redirect()
+                ->back()
+                ->with("error", "Gagal menambahkan website.");
         }
     }
 }

@@ -161,13 +161,6 @@ async function loadSecrets() {
     tbody.innerHTML = '';
 
     data.forEach(secret => {
-        const deleteForm = `
-            <form action="/mikrotik/pppoe/secret/${secret['.id']}" method="POST" onsubmit="return confirm('Yakin ingin menghapus secret ini?')">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-sm btn-danger">Hapus</button>
-            </form>
-        `;
         tbody.innerHTML += `
             <tr>
                 <td>${secret.name || '-'}</td>
@@ -179,11 +172,28 @@ async function loadSecrets() {
                 <td>${secret.disabled === 'true' ? 'Ya' : 'Tidak'}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" onclick="openEditModal('${secret['.id']}', '${secret.name}', '${secret.profile}')">Edit</button>
-                    ${deleteForm}
+                    <button class="btn btn-sm btn-danger" onclick="submitDeleteForm('${secret['.id']}')">Hapus</button>
                 </td>
             </tr>
         `;
     });
+}
+function submitDeleteForm(secretId) {
+    if (!confirm('Yakin ingin menghapus secret ini?')) {
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.action = `/mikrotik/pppoe/secret/${secretId}`;
+    form.method = 'POST';
+
+    form.innerHTML = `
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="_method" value="DELETE">
+    `;
+
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function openEditModal(id, name, profile) {

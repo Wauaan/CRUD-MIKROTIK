@@ -141,14 +141,6 @@
         tbody.innerHTML = '';
     
         data.forEach((profile, index) => {
-            const deleteForm = `
-                <form action="/mikrotik/pppoe/profile/${profile['.id']}" method="POST" onsubmit="return confirm('Yakin ingin menghapus profile ini?')">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button class="btn btn-sm btn-danger">Hapus</button>
-                </form>
-            `;
-    
             tbody.innerHTML += `
                 <tr>
                     <td>${profile.name || '-'}</td>
@@ -158,13 +150,32 @@
                     <td>${profile['only-one'] === 'yes' ? 'Ya' : 'Tidak'}</td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="openEditModal('${profile['.id']}')">Edit</button>
-                        ${deleteForm}
+                        <button class="btn btn-sm btn-danger" onclick="submitDeleteForm('${profile['.id']}')">Hapus</button>
                     </td>
                 </tr>
             `;
         });
     }
-    
+        function submitDeleteForm(profileId) {
+        if (!confirm('Yakin ingin menghapus profile ini?')) {
+            return;
+        }
+
+        // Buat elemen form secara dinamis
+        const form = document.createElement('form');
+        form.action = `/mikrotik/pppoe/profile/${profileId}`;
+        form.method = 'POST';
+
+        // Tambahkan CSRF dan spoof method
+        form.innerHTML = `
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="_method" value="DELETE">
+        `;
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
     function openEditModal(id) {
         const profile = profilesCache.find(p => p['.id'] === id);
         if (!profile) return;

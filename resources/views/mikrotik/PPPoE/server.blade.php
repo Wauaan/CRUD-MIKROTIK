@@ -133,14 +133,6 @@
         tbody.innerHTML = '';
 
         data.forEach((server, index) => {
-            const deleteForm = `
-                <form action="/mikrotik/pppoe/server/${server['.id']}" method="POST" onsubmit="return confirm('Yakin ingin menghapus server ini?')">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button class="btn btn-sm btn-danger">Hapus</button>
-                </form>
-            `;
-
             tbody.innerHTML += `
                 <tr>
                     <td>${server['service-name'] || '-'}</td>
@@ -148,12 +140,30 @@
                     <td>${server.disabled === 'true' ? 'Ya' : 'Tidak'}</td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="openEditModal('${server['.id']}')">Edit</button>
-                        ${deleteForm}
+                        <button class="btn btn-sm btn-danger" onclick="submitDeleteForm('${server['.id']}')">Hapus</button>
                     </td>
                 </tr>
             `;
         });
     }
+
+    function submitDeleteForm(serverId) {
+    if (!confirm('Yakin ingin menghapus server ini?')) {
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.action = `/mikrotik/pppoe/server/${serverId}`;
+    form.method = 'POST';
+
+    form.innerHTML = `
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="_method" value="DELETE">
+    `;
+
+    document.body.appendChild(form);
+    form.submit();
+}
 
 function openEditModal(id) {
     const server = serversCache.find(s => s['.id'] === id);
