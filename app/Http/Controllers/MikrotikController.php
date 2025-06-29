@@ -41,6 +41,11 @@ class MikrotikController extends Controller
         $date = $this->mikrotikService->getRouter();
         return response()->json($date);
     }
+    public function Api_Address_Pool()
+{
+    $pools = $this->mikrotikService->getAddressPools();
+    return response()->json($pools);
+}
     public function view_interfaces()
     {
         return view("mikrotik.interfaces");
@@ -529,4 +534,68 @@ class MikrotikController extends Controller
                 );
         }
     }
+
+    public function storeHotspotUserProfile(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'address-pool' => 'required|string|not_in:-- Pilih Address Pool --',
+        'shared-users' => 'nullable|numeric',
+        'idle-timeout' => 'nullable|string',
+    ]);
+
+    try {
+        $data = [
+            'name' => $request->input('name'),
+            'address-pool' => $request->input('address-pool'),
+            'shared-users' => $request->input('shared-users'),
+            'idle-timeout' => $request->input('idle-timeout'),
+        ];
+
+        $this->mikrotikService->addHotspotUserProfile($data);
+
+        return redirect()
+            ->route('hotspot.user.Profile')
+            ->with('success', 'User Profile berhasil ditambahkan');
+    } catch (\Throwable $e) {
+        return redirect()
+            ->route('hotspot.user.Profile')
+            ->with('error', 'Gagal menambahkan User Profile: ' . $e->getMessage());
+    }
+}
+public function updateHotspotUserProfile(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'address-pool' => 'required|string',
+        'shared-users' => 'nullable|integer',
+        'idle-timeout' => 'nullable|string',
+    ]);
+
+    try {
+        $data = [
+            '.id' => $id,
+            'name' => $request->input('name'),
+            'address-pool' => $request->input('address-pool'),
+            'shared-users' => $request->input('shared-users'),
+            'idle-timeout' => $request->input('idle-timeout'),
+        ];
+
+        $this->mikrotikService->updateHotspotUserProfile($data);
+
+        return redirect()->route('hotspot.user.Profile')->with('success', 'User Profile berhasil diupdate');
+    } catch (\Throwable $e) {
+        return redirect()->route('hotspot.user.Profile')->with('error', 'Gagal update User Profile: ' . $e->getMessage());
+    }
+}
+public function deleteHotspotUserProfile($id)
+{
+    try {
+        $this->mikrotikService->deleteHotspotUserProfile($id);
+        return redirect()->back()->with('success', 'User Profile berhasil dihapus.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menghapus User Profile: ' . $e->getMessage());
+    }
+}
+
 }

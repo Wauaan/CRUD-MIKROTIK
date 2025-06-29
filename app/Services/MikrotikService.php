@@ -52,6 +52,12 @@ class MikrotikService
         return $this->client->query($query)->read();
     }
 
+public function getAddressPools()
+{
+    $query = new Query('/ip/pool/print');
+    return $this->client->query($query)->read();
+}
+
     public function getResources()
     {
         $query = new Query("/system/resource/print");
@@ -284,4 +290,37 @@ class MikrotikService
 
         return $this->client->query($query)->read();
     }
+
+    public function addHotspotUserProfile($data)
+{
+    $query = new Query('/ip/hotspot/user/profile/add');
+    foreach ($data as $key => $value) {
+        if ($value !== null && $value !== '') {
+            $query->equal($key, $value);
+        }
+    }
+
+    return $this->client->query($query)->read();
+}
+public function updateHotspotUserProfile(array $data)
+{
+    $query = new Query('/ip/hotspot/user/profile/set');
+    $query->equal('.id', $data['.id']);
+
+    foreach ($data as $key => $value) {
+        if ($key !== '.id' && $value !== null && $value !== '') {
+            $query->equal($key, $value);
+        }
+    }
+
+    return $this->client->query($query)->read();
+}
+public function deleteHotspotUserProfile($id)
+{
+    $query = new Query('/ip/hotspot/user/profile/remove');
+    $query->equal('.id', $id);
+
+    return $this->client->query($query)->read();
+}
+
 }

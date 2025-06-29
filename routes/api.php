@@ -25,6 +25,8 @@ Route::get("/mikrotik/interfaces", [MikrotikController::class, "api_Interfaces"]
 Route::get("/mikrotik/date", [MikrotikController::class, "api_date"]);
 Route::get("/mikrotik/router", [MikrotikController::class, "api_router"]);
 Route::get("/mikrotik/interface/monitor", [MikrotikController::class, "monitorInterface"]);
+Route::get('/mikrotik/address-pool', [MikrotikController::class, 'Api_Address_Pool']);
+
 
 // TODO: API PPPoE
 Route::prefix("mikrotik/pppoe")->group(function () {
