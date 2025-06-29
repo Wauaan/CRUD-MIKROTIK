@@ -28,6 +28,7 @@ Route::get("/mikrotik/interface/monitor", [MikrotikController::class, "monitorIn
 Route::get('/mikrotik/address-pool', [MikrotikController::class, 'Api_Address_Pool']);
 
 
+
 // TODO: API PPPoE
 Route::prefix("mikrotik/pppoe")->group(function () {
     Route::get("/server", [MikrotikController::class, "server"]);

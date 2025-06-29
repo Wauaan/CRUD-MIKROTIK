@@ -322,5 +322,36 @@ public function deleteHotspotUserProfile($id)
 
     return $this->client->query($query)->read();
 }
+public function addHotspotUser(array $data)
+{
+    $query = (new Query('/ip/hotspot/user/add'))->equal('name', $data['name'])->equal('password', $data['password']);
 
+    if (!empty($data['profile'])) {
+        $query->equal('profile', $data['profile']);
+    }
+
+    if (!empty($data['comment'])) {
+        $query->equal('comment', $data['comment']);
+    }
+
+    return $this->client->query($query)->read();
+}
+// Update user
+public function updateHotspotUser(array $data)
+{
+    $query = new Query('/ip/hotspot/user/set');
+    foreach ($data as $key => $value) {
+        $query->equal($key, $value);
+    }
+    return $this->client->query($query)->read();
+}
+
+// Hapus user
+public function deleteHotspotUser($id)
+{
+    $query = new Query('/ip/hotspot/user/remove');
+    $query->equal('.id', $id);
+
+    return $this->client->query($query)->read();
+}
 }

@@ -102,6 +102,11 @@ Route::middleware("auth")->group(function () {
         Route::post('/user-profile/store', [MikrotikController::class, 'storeHotspotUserProfile'])->name('hotspot.user-profile.store');
         Route::put('/user-profile/{id}', [MikrotikController::class, 'updateHotspotUserProfile'])->name('hotspot.user-profile.update');
         Route::delete('/user-profile/{id}', [MikrotikController::class, 'deleteHotspotUserProfile'])->name('hotspot.user-profile.delete');
+
+        // TODO: CRUD Hotspot User
+        Route::post('/hotspot-user/store', [MikrotikController::class, 'storeHotspotUser'])->name('hotspot.user.store');
+        Route::put('/hotspot-user/{id}', [MikrotikController::class, 'updateHotspotUser'])->name('hotspot.user.update');
+        Route::delete('/hotspot-user/{id}', [MikrotikController::class, 'destroyHotspotUser'])->name('hotspot.user.destroy');
     });
 });
 

@@ -598,4 +598,64 @@ public function deleteHotspotUserProfile($id)
     }
 }
 
+public function storeHotspotUser(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'password' => 'required|string',
+        'profile' => 'nullable|string',
+        'comment' => 'nullable|string',
+    ]);
+
+    try {
+        $this->mikrotikService->addHotspotUser([
+            'name' => $request->name,
+            'password' => $request->password,
+            'profile' => $request->profile,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->back()->with('success', 'Hotspot User berhasil ditambahkan.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menambahkan user: ' . $e->getMessage());
+    }
+}
+public function updateHotspotUser(Request $request, $id, MikrotikService $mikrotik)
+{
+    $request->validate([
+        'name' => 'required|string',
+        'profile' => 'required|string',
+    ]);
+
+    try {
+        $data = [
+            '.id' => $id,
+            'name' => $request->name,
+            'profile' => $request->profile,
+            'comment' => $request->comment,
+        ];
+
+        // hanya update password jika diisi
+        if ($request->filled('password')) {
+            $data['password'] = $request->password;
+        }
+
+        $mikrotik->updateHotspotUser($data);
+        return redirect()->back()->with('success', 'Hotspot user berhasil diperbarui.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
+    }
+}
+
+public function destroyHotspotUser($id)
+{
+    try {
+    $this->mikrotikService->deleteHotspotUser($id); // tidak perlu if
+    return redirect()->back()->with('success', 'Hotspot User berhasil dihapus.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+
+}
+
 }
