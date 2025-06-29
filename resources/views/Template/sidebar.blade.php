@@ -63,5 +63,12 @@
                 <a class="collapse-item" href="{{ route('hotspot.user.Profile') }}">Hotspot User Profile</a>
             </div>
         </div>
-    </li>   
+    </li> 
+    <li class="nav-item">
+    <a class="nav-link" href="{{ route('users.index') }}">
+        <i class="fas fa-user-plus"></i>
+        <span>Tambah User</span>
+    </a>
+</li>
+
 </ul>

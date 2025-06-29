@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\NextDnsController;
+use App\Http\Controllers\Auth\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +109,10 @@ Route::middleware("auth")->group(function () {
         Route::put('/hotspot-user/{id}', [MikrotikController::class, 'updateHotspotUser'])->name('hotspot.user.update');
         Route::delete('/hotspot-user/{id}', [MikrotikController::class, 'destroyHotspotUser'])->name('hotspot.user.destroy');
     });
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 // TODO: Login & Logout Routes
